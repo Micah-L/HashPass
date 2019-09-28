@@ -1,8 +1,5 @@
 import React, { Component } from 'react';
 import { Button, Clipboard, Text, TextInput, View,  Item, Input, Icon, Label, TouchableOpacity, StyleSheet, Platform, Image} from 'react-native';
-import { createAppContainer } from 'react-navigation';
-import { createStackNavigator } from 'react-navigation-stack';
-
 import { withStyles } from '@material-ui/core';
 import TextField from '@material-ui/core/TextField';
 import PropTypes from 'prop-types';
