@@ -18,15 +18,16 @@ For development you will need:
 
 ### Installing
 
-
-
-```
-$ yarn install
-```
-
+To install, make sure you have the prerequisites and run:
 
 ```
-$ yarn start
+yarn install
+```
+
+To start the expo environment run:
+
+```
+yarn start
 ```
 
 If you want to build the APK:
