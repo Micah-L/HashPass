@@ -15,10 +15,13 @@ For development you will need:
 * Yarn
 * React-Native
 
-
 ### Installing
 
-To install, make sure you have the prerequisites and run:
+To download the latest APK click here [HashPass.apk](release/HashPass.apk)
+
+### Developing
+
+To install for development, clone this repository and run:
 
 ```
 yarn install
