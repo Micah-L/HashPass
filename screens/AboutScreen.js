@@ -7,7 +7,7 @@ export default function AboutScreen() {
 	<Text style={styles.titleText}> How to use: </Text>
 		<View style={styles.textBox}>
 			<Text style={styles.baseText}> 
-			Use a secure passphrase for the secret. This could be 5 to 10 random words. 
+			Use a secure passphrase for the secret. This could be 5 or more random words. 
 			</Text>
 			<Text style={styles.baseText}>
 			Whenever you need a password, think of a key you will remember. 

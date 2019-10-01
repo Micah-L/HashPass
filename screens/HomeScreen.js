@@ -15,144 +15,53 @@ import {
   Input,
   Icon,
   Label,
+  ToastAndroid,
 } from 'react-native';
 import { withStyles } from '@material-ui/core';
 import TextField from '@material-ui/core/TextField';
 import PropTypes from 'prop-types';
 const Crypto = require('crypto-js');
-const hex_alph = "0123456789abcdef"
-const my_alph = "0123456789abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ!@#$%^&*-+="
-const default_passlength = 20
-var background_color = '#fff'
-var text_color = 'white'
-var border_color = 'black'
-import { MonoText } from '../components/StyledText';
-
-/*
-
-      <ScrollView
-        style={styles.container}
-        contentContainerStyle={styles.contentContainer}>
-        <View style={styles.welcomeContainer}>
-          <Image
-            source={
-              __DEV__
-                ? require('../assets/images/robot-dev.png')
-                : require('../assets/images/robot-prod.png')
-            }
-            style={styles.welcomeImage}
-          />
-        </View>
-		
-		<View style={styles.getStartedContainer}>
-          <DevelopmentModeNotice />
-          <Text style={styles.getStartedText}>Get started by opening</Text>
-
-          <View
-            style={[styles.codeHighlightContainer, styles.homeScreenFilename]}>
-            <MonoText>screens/HomeScreen.js</MonoText>
-          </View>
-
-          <Text style={styles.getStartedText}>
-            Change this text and your app will automatically reload.
-          </Text>
-        </View>
-		<View style={styles.helpContainer}>
-          <TouchableOpacity onPress={handleHelpPress} style={styles.helpLink}>
-            <Text style={styles.helpLinkText}>
-              Help, it didn’t automatically reload!
-            </Text>
-          </TouchableOpacity>
-        </View>
-      </ScrollView>
-	  
-      <View style={styles.tabBarInfoContainer}>
-        <Text style={styles.tabBarInfoText}>
-          This is a tab bar. You can edit it in:
-        </Text>
-
-        <View
-          style={[styles.codeHighlightContainer, styles.navigationFilename]}>
-          <MonoText style={styles.codeHighlightText}>
-            navigation/MainTabNavigator.js
-          </MonoText>
-        </View>
-      </View>
-*/
-/*
-      <View style={{flex: 1, padding: 10, backgroundColor: background_color}}>
-	   <Button
-			title = "Copy Password"
-			color = "#f194ff"
-			onPress = {() => Clipboard.setString(reEncode(Crypto.SHA512(this.state.secret  + Crypto.SHA512(this.state.key).toString()).toString(),hex_alph,this.state.alphabet).slice(0,this.state.passlength))}
-		/>
-        <Text style={{padding: 10, fontSize: 24}}>
-          {reEncode(Crypto.SHA512(this.state.secret  + Crypto.SHA512(this.state.key).toString()).toString(),hex_alph,this.state.alphabet).slice(0,this.state.passlength)}		  
-        </Text>
-	  
-		<Text> Secret: </Text>
-        <View style = { styles.textBoxBtnHolder }>
-        <TextInput
-		  underlineColorAndroid = "transparent"
-		  secureTextEntry={this.state.hide_secret}
-          style = { styles.textBox }
-          placeholder="Type a secret passphrase."
-          onChangeText={(secret) => this.setState({secret})}
-          value={this.state.secret}
-        />
-		<TouchableOpacity activeOpacity = { 0.8 } style = { styles.visibilityBtn } onPress = { () => this.setState({ hide_secret: !this.state.hide_secret }) }>
-            <Image source = { ( this.state.hide_secret ) ? require('./assets/images/hide.png') : require('./assets/images/view.png') } style = { styles.btnImage } />
-        </TouchableOpacity>
-		</View>
-		<Text> Key: </Text>
-        <TextInput
-		  
-          style={{height: 40, borderColor: border_color, borderWidth: 1}}
-          placeholder="Type a key. This could be a website or app you need a password for."
-          onChangeText={(key) => this.setState({key})}
-          value={this.state.key}
-        />
-		<Text>{"     "}</Text>
-	    <Text style={{ borderBottomWidth: 30, borderColor: background_color}}> Only change the password length and characters if you know what you are doing. You should use the same length and characters each time. </Text>
-		<Text color={text_color}> Password Length: </Text>
-        <TextInput
-          style={{height: 40}}
-          placeholder={"Default: " + default_passlength.toString()}
-          onChangeText={(passlength) => this.setState({passlength})}
-          value={String(this.state.passlength)}
-        />
-		<Text> Characters (order matters): </Text>
-        <TextInput
-		  multiline
-          style={{height: 80}}
-          placeholder={"Default: " + my_alph}
-          onChangeText={(alphabet) => this.setState({alphabet})}
-          value={this.state.alphabet}
-        />		
-      </View>
-*/
+const hex_alph = "0123456789abcdef";
+const my_alph = "0123456789abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ!@#$%^&*-+=";
+const default_passlength = 16;
+var background_color = '#fff';
+import KeyboardShift from '../components/KeyboardShift';
 
 export default class HomeScreen extends Component {
   constructor(props) {
     super(props);
-    this.state = {key: '', secret: '', hide_secret: true, generated_pass: '', passlength: default_passlength, alphabet: my_alph};
+    this.state = {key: '', secret: '', hide_password: false, hide_secret: true, generated_pass: '', passlength: default_passlength, alphabet: my_alph};
   }
 
   render() {
-    return (
+    return ( <KeyboardShift> 
     <ScrollView
         style={styles.container}
         contentContainerStyle={styles.contentContainer}>	
 		
       <View style={styles.container}>
+	  <Button
+			title = "Show/Hide Password"
+			color = "#c194ef"
+			onPress = {() => this.setState({hide_password: !this.state.hide_password}) }
+		/>
+		
+	   <Text>{"     "}</Text>
 	   <Button
 			title = "Copy Password"
-			color = "#f194ff"
-			onPress = {() => Clipboard.setString(reEncode(Crypto.SHA512(this.state.secret  + Crypto.SHA512(this.state.key).toString()).toString(),hex_alph,this.state.alphabet).slice(0,this.state.passlength))}
+			color = "#c194ef"
+			onPress = {() => 
+				{
+					ToastAndroid.showWithGravity('Password copied to clipboard.',  ToastAndroid.SHORT,  ToastAndroid.CENTER);
+					Clipboard.setString(reEncode(Crypto.SHA512(this.state.secret  + Crypto.SHA512(this.state.key).toString()).toString(),hex_alph,this.state.alphabet).slice(0,this.state.passlength)); 
+					
+				}	}
 		/>
-        <Text style={{padding: 10, fontSize: 24}}>
-          {reEncode(Crypto.SHA512(this.state.secret  + Crypto.SHA512(this.state.key).toString()).toString(),hex_alph,this.state.alphabet).slice(0,this.state.passlength)}		  
+		<View style = {{flexDirection: 'row', justifyContent: 'center'}}>
+        <Text style={{padding: 10, fontSize: 20, fontFamily: "space-mono"}}>
+          {this.state.hide_password ? '***Password Hidden***' : this.state.key == '' || this.state.secret == '' || this.state.alphabet == '' ? 'Your password will appear here' : reEncode(Crypto.SHA512(this.state.secret  + Crypto.SHA512(this.state.key).toString()).toString(),hex_alph,this.state.alphabet).slice(0,this.state.passlength)}		  
         </Text>
+		</View>
 	  
 		<Text> Secret: </Text>
         <View style = { styles.textBoxBtnHolder }>
@@ -169,16 +78,20 @@ export default class HomeScreen extends Component {
         </TouchableOpacity>
 		</View>
 		<Text> Key: </Text>
+		<View style = { styles.textBoxBtnHolder }>
         <TextInput
-		  
-          style={{height: 40, borderColor: border_color, borderWidth: 1}}
-          placeholder="Type a key. This could be a website or app you need a password for."
+		  underlineColorAndroid = "transparent"
+          style={styles.textBox}
+          placeholder="This could be a website or app you need a password for."
           onChangeText={(key) => this.setState({key})}
           value={this.state.key}
         />
-		<Text>{"     "}</Text>
-	    <Text style={{ borderBottomWidth: 30, borderColor: background_color}}> Only change the password length and characters if you know what you are doing. You should use the same length and characters each time. </Text>
-		<Text color={text_color}> Password Length: </Text>
+		<TouchableOpacity activeOpacity = { 0.8 } style = { styles.visibilityBtn } onPress = { () => this.setState({ key: '' }) }>
+			<Image source = { require('../assets/images/x.png')} style = { styles.btnImage } />
+		</TouchableOpacity>
+		</View>
+		<Text>{"     "}</Text>	    
+		<Text> Password Length: </Text>
         <TextInput
           style={{height: 40}}
           placeholder={"Default: " + default_passlength.toString()}
@@ -188,71 +101,32 @@ export default class HomeScreen extends Component {
 		<Text> Characters (order matters): </Text>
         <TextInput
 		  multiline
-          style={{height: 80}}
+          style={{height: 100, fontFamily: "space-mono"}}
           placeholder={"Default: " + my_alph}
           onChangeText={(alphabet) => this.setState({alphabet})}
           value={this.state.alphabet}
         />		
+		<View style = {{
+		flexDirection: 'column',
+		justifyContent: 'center',}}>
+		<View style = {{flexDirection: 'row', justifyContent: 'center'}}>
+		<Text style={{ borderBottomWidth: 30, borderColor: background_color}}>You may change the password length and characters used. They will be reset when the app is reloaded. In a later version you will be able to save these values. </Text>
+		</View>
+	   </View>
       </View>
 	</ScrollView>
+	</KeyboardShift>
 
     );
   }
+
 }
-/*
-export default function HomeScreen() {
-  return (
-    <View style={styles.container}>
-		
 
 
-        
-
-        
-
-
-    </View>
-  );
-}*/
 
 HomeScreen.navigationOptions = {
   title: 'HashPass',
 };
-
-/*function DevelopmentModeNotice() {
-  if (__DEV__) {
-    const learnMoreButton = (
-      <Text onPress={handleLearnMorePress} style={styles.helpLinkText}>
-        Learn more
-      </Text>
-    );
-
-    return (
-      <Text style={styles.developmentModeText}>
-        Development mode is enabled: your app will be slower but you can use
-        useful development tools. {learnMoreButton}
-      </Text>
-    );
-  } else {
-    return (
-      <Text style={styles.developmentModeText}>
-        You are not in development mode: your app will run at full speed.
-      </Text>
-    );
-  }
-}*/
-/*
-function handleLearnMorePress() {
-  WebBrowser.openBrowserAsync(
-    'https://docs.expo.io/versions/latest/workflow/development-mode/'
-  );
-}
-
-function handleHelpPress() {
-  WebBrowser.openBrowserAsync(
-    'https://docs.expo.io/versions/latest/workflow/up-and-running/#cant-see-your-changes'
-  );
-}*/
 
 
 
@@ -260,8 +134,8 @@ function reEncode(s, alpha, alphaNew) {
 	const m1 = alpha.length;
 	const m2 = alphaNew.length;
 	var alphaVals = new Object();
-	console.log("s: " + s)
-	console.log("m1: " + m1 + "   m2: " + m2)
+	//console.log("s: " + s)
+	//console.log("m1: " + m1 + "   m2: " + m2)
 	let s_digits = [];
 	
 	for (let i = 0; i < m1; i++) {
@@ -272,13 +146,13 @@ function reEncode(s, alpha, alphaNew) {
 		s_digits[i] =  alphaVals[s[i]]
 	}
 	let new_digits = convertBase(s_digits, m1, m2);
-	console.log("s_digits: " + s_digits.toString())
-	console.log("new_digits: " + new_digits)
+	//console.log("s_digits: " + s_digits.toString())
+	//console.log("new_digits: " + new_digits)
 	let new_s = '';
 	for (let i = 0; i < new_digits.length; i++) {
 		new_s = alphaNew[new_digits[i]] + new_s
 	}
-	console.log(new_s)
+	//console.log(new_s)
 	return new_s;
 }
 function convertBase(digits, fromBase, toBase) {
@@ -369,85 +243,4 @@ const styles = StyleSheet.create({
     height: '100%',
     width: '100%'
   }, 
- 
-  developmentModeText: {
-    marginBottom: 20,
-    color: 'rgba(0,0,0,0.4)',
-    fontSize: 14,
-    lineHeight: 19,
-    textAlign: 'center',
-  },
-
-  welcomeContainer: {
-    alignItems: 'center',
-    marginTop: 10,
-    marginBottom: 20,
-  },
-  welcomeImage: {
-    width: 100,
-    height: 80,
-    resizeMode: 'contain',
-    marginTop: 3,
-    marginLeft: -10,
-  },
-  getStartedContainer: {
-    alignItems: 'center',
-    marginHorizontal: 50,
-  },
-  homeScreenFilename: {
-    marginVertical: 7,
-  },
-  codeHighlightText: {
-    color: 'rgba(96,100,109, 0.8)',
-  },
-  codeHighlightContainer: {
-    backgroundColor: 'rgba(0,0,0,0.05)',
-    borderRadius: 3,
-    paddingHorizontal: 4,
-  },
-  getStartedText: {
-    fontSize: 17,
-    color: 'rgba(96,100,109, 1)',
-    lineHeight: 24,
-    textAlign: 'center',
-  },
-  tabBarInfoContainer: {
-    position: 'absolute',
-    bottom: 0,
-    left: 0,
-    right: 0,
-    ...Platform.select({
-      ios: {
-        shadowColor: 'black',
-        shadowOffset: { width: 0, height: -3 },
-        shadowOpacity: 0.1,
-        shadowRadius: 3,
-      },
-      android: {
-        elevation: 20,
-      },
-    }),
-    alignItems: 'center',
-    backgroundColor: '#fbfbfb',
-    paddingVertical: 20,
-  },
-  tabBarInfoText: {
-    fontSize: 17,
-    color: 'rgba(96,100,109, 1)',
-    textAlign: 'center',
-  },
-  navigationFilename: {
-    marginTop: 5,
-  },
-  helpContainer: {
-    marginTop: 15,
-    alignItems: 'center',
-  },
-  helpLink: {
-    paddingVertical: 15,
-  },
-  helpLinkText: {
-    fontSize: 14,
-    color: '#2e78b7',
-  },
 });
