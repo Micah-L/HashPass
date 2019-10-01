@@ -25,97 +25,89 @@ const hex_alph = "0123456789abcdef";
 const my_alph = "0123456789abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ!@#$%^&*-+=";
 const default_passlength = 16;
 var background_color = '#fff';
+var button_color = "#c194ef";
 import KeyboardShift from '../components/KeyboardShift';
 
 export default class HomeScreen extends Component {
-  constructor(props) {
-    super(props);
-    this.state = {key: '', secret: '', hide_password: false, hide_secret: true, generated_pass: '', passlength: default_passlength, alphabet: my_alph};
-  }
-
-  render() {
-    return ( <KeyboardShift> 
-    <ScrollView
-        style={styles.container}
-        contentContainerStyle={styles.contentContainer}>	
-		
-      <View style={styles.container}>
-	  <Button
-			title = "Show/Hide Password"
-			color = "#c194ef"
-			onPress = {() => this.setState({hide_password: !this.state.hide_password}) }
+	constructor(props) {
+		super(props);
+		this.state = {key: '', secret: '', hide_password: false, hide_secret: true, generated_pass: '', passlength: default_passlength, alphabet: my_alph};
+	}
+render() { return (     
+<KeyboardShift> 
+<ScrollView style={styles.container} contentContainerStyle={styles.contentContainer}>	
+<View style={styles.container}>
+	<Button
+	 title = "Show/Hide Password"
+	 color = button_color
+	 onPress = {() => this.setState({hide_password: !this.state.hide_password}) }
+	/>
+	<Text>{"     "}</Text>
+	<Button
+	 title = "Copy Password"
+	 color = button_color
+	 onPress = {() => 
+		{
+		ToastAndroid.showWithGravity('Password copied to clipboard.',  ToastAndroid.SHORT,  ToastAndroid.CENTER);
+		Clipboard.setString(reEncode(Crypto.SHA512(this.state.secret  + Crypto.SHA512(this.state.key).toString()).toString(),hex_alph,this.state.alphabet).slice(0,this.state.passlength)); 		
+		}}
+	/>
+	<View style = {{flexDirection: 'row', justifyContent: 'center'}}>
+		<Text style={{padding: 10, fontSize: 20, fontFamily: "space-mono"}}>
+		{this.state.hide_password ? '***Password Hidden***' : this.state.key == '' || this.state.secret == '' || this.state.alphabet == '' ? 'Your password will appear here' : reEncode(Crypto.SHA512(this.state.secret  + Crypto.SHA512(this.state.key).toString()).toString(),hex_alph,this.state.alphabet).slice(0,this.state.passlength)}		  
+		</Text>
+	</View>
+	<Text> Secret: </Text>
+	<View style = { styles.textBoxBtnHolder }>
+		<TextInput
+		 underlineColorAndroid = "transparent"
+		 secureTextEntry={this.state.hide_secret}
+		 style = { styles.textBox }
+		 placeholder="Type a secret passphrase."
+		 onChangeText={(secret) => this.setState({secret})}
+		 value={this.state.secret}
 		/>
-		
-	   <Text>{"     "}</Text>
-	   <Button
-			title = "Copy Password"
-			color = "#c194ef"
-			onPress = {() => 
-				{
-					ToastAndroid.showWithGravity('Password copied to clipboard.',  ToastAndroid.SHORT,  ToastAndroid.CENTER);
-					Clipboard.setString(reEncode(Crypto.SHA512(this.state.secret  + Crypto.SHA512(this.state.key).toString()).toString(),hex_alph,this.state.alphabet).slice(0,this.state.passlength)); 
-					
-				}	}
-		/>
-		<View style = {{flexDirection: 'row', justifyContent: 'center'}}>
-        <Text style={{padding: 10, fontSize: 20, fontFamily: "space-mono"}}>
-          {this.state.hide_password ? '***Password Hidden***' : this.state.key == '' || this.state.secret == '' || this.state.alphabet == '' ? 'Your password will appear here' : reEncode(Crypto.SHA512(this.state.secret  + Crypto.SHA512(this.state.key).toString()).toString(),hex_alph,this.state.alphabet).slice(0,this.state.passlength)}		  
-        </Text>
-		</View>
-	  
-		<Text> Secret: </Text>
-        <View style = { styles.textBoxBtnHolder }>
-        <TextInput
-		  underlineColorAndroid = "transparent"
-		  secureTextEntry={this.state.hide_secret}
-          style = { styles.textBox }
-          placeholder="Type a secret passphrase."
-          onChangeText={(secret) => this.setState({secret})}
-          value={this.state.secret}
-        />
 		<TouchableOpacity activeOpacity = { 0.8 } style = { styles.visibilityBtn } onPress = { () => this.setState({ hide_secret: !this.state.hide_secret }) }>
-            <Image source = { ( this.state.hide_secret ) ? require('../assets/images/hide.png') : require('../assets/images/view.png') } style = { styles.btnImage } />
-        </TouchableOpacity>
-		</View>
-		<Text> Key: </Text>
-		<View style = { styles.textBoxBtnHolder }>
-        <TextInput
-		  underlineColorAndroid = "transparent"
-          style={styles.textBox}
-          placeholder="This could be a website or app you need a password for."
-          onChangeText={(key) => this.setState({key})}
-          value={this.state.key}
-        />
+			<Image source = { ( this.state.hide_secret ) ? require('../assets/images/hide.png') : require('../assets/images/view.png') } style = { styles.btnImage } />
+		</TouchableOpacity>
+	</View>
+	<Text> Key: </Text>
+	<View style = { styles.textBoxBtnHolder }>
+		<TextInput
+		 underlineColorAndroid = "transparent"
+		 style={styles.textBox}
+		 placeholder="This could be a website or app you need a password for."
+		 onChangeText={(key) => this.setState({key})}
+		 value={this.state.key}
+		/>
 		<TouchableOpacity activeOpacity = { 0.8 } style = { styles.visibilityBtn } onPress = { () => this.setState({ key: '' }) }>
 			<Image source = { require('../assets/images/x.png')} style = { styles.btnImage } />
 		</TouchableOpacity>
-		</View>
-		<Text>{"     "}</Text>	    
-		<Text> Password Length: </Text>
-        <TextInput
-          style={{height: 40}}
-          placeholder={"Default: " + default_passlength.toString()}
-          onChangeText={(passlength) => this.setState({passlength})}
-          value={String(this.state.passlength)}
-        />
-		<Text> Characters (order matters): </Text>
-        <TextInput
-		  multiline
-          style={{height: 100, fontFamily: "space-mono"}}
-          placeholder={"Default: " + my_alph}
-          onChangeText={(alphabet) => this.setState({alphabet})}
-          value={this.state.alphabet}
-        />		
-		<View style = {{
-		flexDirection: 'column',
-		justifyContent: 'center',}}>
+	</View>
+	<Text>{"     "}</Text>	    
+	<Text> Password Length: </Text>
+	<TextInput
+	 style={{height: 40}}
+	 placeholder={"Default: " + default_passlength.toString()}
+	 onChangeText={(passlength) => this.setState({passlength})}
+	 value={String(this.state.passlength)}
+	/>
+	<Text> Characters (order matters): </Text>
+	<TextInput
+	 multiline
+	 style={{height: 100, fontFamily: "space-mono"}}
+	 placeholder={"Default: " + my_alph}
+	 onChangeText={(alphabet) => this.setState({alphabet})}
+	 value={this.state.alphabet}
+	/>
+	<View style = {{flexDirection: 'column', justifyContent: 'center'}}>
 		<View style = {{flexDirection: 'row', justifyContent: 'center'}}>
-		<Text style={{ borderBottomWidth: 30, borderColor: background_color}}>You may change the password length and characters used. They will be reset when the app is reloaded. In a later version you will be able to save these values. </Text>
+			<Text style={{ borderBottomWidth: 30, borderColor: background_color}}>You may change the password length and characters used. They will be reset when the app is reloaded. In a later version you will be able to save these values. </Text>
 		</View>
-	   </View>
-      </View>
-	</ScrollView>
-	</KeyboardShift>
+	</View>
+</View>
+</ScrollView>
+</KeyboardShift>
 
     );
   }
