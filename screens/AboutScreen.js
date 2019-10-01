@@ -23,7 +23,7 @@ export default function AboutScreen() {
 			<Text style={styles.baseText}>
 			This program computes Hash(secret || Hash(key)). By default, Hash is SHA512. 
 			The hexadecimal number is then converted to a new number system using the given character set, which by default is base 73.
-			Then the first few characters are taken (default: 20) for the password.
+			Then the first few characters are taken (default: 16) for the password.
 			</Text>
 		</View>
     </ScrollView>
