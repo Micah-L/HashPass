@@ -31,7 +31,8 @@
 		"bundleIdentifier": "com.micah.hashpass"
 		},
 	"android": {
-		"package": "com.micah.hashpass"
+		"package": "com.micah.hashpass",
+		"permissions": []
 		}
   }
 }
