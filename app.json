@@ -24,15 +24,13 @@
       "**/*"
     ],
     "ios": {
-      "supportsTablet": true
+      "bundleIdentifier": "com.micah.hashpass"
     },
     "description": "",
-	"ios": {
-		"bundleIdentifier": "com.micah.hashpass"
-		},
-	"android": {
-		"package": "com.micah.hashpass",
-		"permissions": []
-		}
+    "android": {
+      "package": "com.micah.hashpass",
+      "permissions": []
+    },
+    "githubUrl": "https://github.com/Micah-L/HashPass"
   }
 }

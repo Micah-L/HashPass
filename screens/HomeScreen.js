@@ -1,5 +1,6 @@
 import * as WebBrowser from 'expo-web-browser';
 import React, { Component } from 'react';
+import Toast from 'react-native-simple-toast';
 import {
   Button,	
   Clipboard,
@@ -15,7 +16,6 @@ import {
   Input,
   Icon,
   Label,
-  ToastAndroid,
 } from 'react-native';
 import { withStyles } from '@material-ui/core';
 import TextField from '@material-ui/core/TextField';
@@ -31,7 +31,14 @@ import KeyboardShift from '../components/KeyboardShift';
 export default class HomeScreen extends Component {
 	constructor(props) {
 		super(props);
-		this.state = {key: '', secret: '', hide_password: false, hide_secret: true, generated_pass: '', passlength: default_passlength, alphabet: my_alph};
+		this.state = {
+			key: '', 
+			secret: '', 
+			hide_password: false, 
+			hide_secret: true, 
+			generated_pass: '',
+			passlength: default_passlength, 
+			alphabet: my_alph };
 	}
 render() { return (     
 <KeyboardShift> 
@@ -39,22 +46,22 @@ render() { return (
 <View style={styles.container}>
 	<Button
 	 title = "Show/Hide Password"
-	 color = button_color
+	 color = "#c194ef"
 	 onPress = {() => this.setState({hide_password: !this.state.hide_password}) }
 	/>
 	<Text>{"     "}</Text>
 	<Button
 	 title = "Copy Password"
-	 color = button_color
+	 color = "#c194ef"
 	 onPress = {() => 
 		{
-		ToastAndroid.showWithGravity('Password copied to clipboard.',  ToastAndroid.SHORT,  ToastAndroid.CENTER);
+		Toast.showWithGravity('Password copied to clipboard.',  Toast.SHORT,  Toast.CENTER);
 		Clipboard.setString(reEncode(Crypto.SHA512(this.state.secret  + Crypto.SHA512(this.state.key).toString()).toString(),hex_alph,this.state.alphabet).slice(0,this.state.passlength)); 		
 		}}
 	/>
 	<View style = {{flexDirection: 'row', justifyContent: 'center'}}>
 		<Text style={{padding: 10, fontSize: 20, fontFamily: "space-mono"}}>
-		{this.state.hide_password ? '***Password Hidden***' : this.state.key == '' || this.state.secret == '' || this.state.alphabet == '' ? 'Your password will appear here' : reEncode(Crypto.SHA512(this.state.secret  + Crypto.SHA512(this.state.key).toString()).toString(),hex_alph,this.state.alphabet).slice(0,this.state.passlength)}		  
+			{this.state.hide_password ? '***Password Hidden***' : this.state.key == '' || this.state.secret == '' || this.state.alphabet == '' ? 'Your password will appear here' : reEncode(Crypto.SHA512(this.state.secret  + Crypto.SHA512(this.state.key).toString()).toString(),hex_alph,this.state.alphabet).slice(0,this.state.passlength)}		  
 		</Text>
 	</View>
 	<Text> Secret: </Text>
@@ -63,6 +70,9 @@ render() { return (
 		 underlineColorAndroid = "transparent"
 		 secureTextEntry={this.state.hide_secret}
 		 style = { styles.textBox }
+		 autoCorrect={false} 
+		 autoCapitalize={"none"}
+		 autoCompleteType={"off"}
 		 placeholder="Type a secret passphrase."
 		 onChangeText={(secret) => this.setState({secret})}
 		 value={this.state.secret}
@@ -108,20 +118,13 @@ render() { return (
 </View>
 </ScrollView>
 </KeyboardShift>
-
     );
   }
-
 }
-
-
 
 HomeScreen.navigationOptions = {
   title: 'HashPass',
 };
-
-
-
 function reEncode(s, alpha, alphaNew) {
 	const m1 = alpha.length;
 	const m2 = alphaNew.length;
