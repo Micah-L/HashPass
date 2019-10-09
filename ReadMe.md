@@ -2,7 +2,11 @@
 
 HashPass is a new kind of password manager and password generator. You won't need to make a new backup every time you create a new password. Instead, you pick a secret passphrase which will seed all of your passwords. Using nested hash functions, your passwords are generated on a case by case basis.
 
-## Getting Started
+## Installing
+
+You can install this app right from [the Google play store](https://play.google.com/store/apps/details?id=com.micah.hashpass), or from the [latest apk](release/HashPass.apk).
+
+## Developing
 
 This project uses Expo. Thus it is written in JavaScript using React.
 
@@ -15,11 +19,7 @@ For development you will need:
 * Yarn
 * React-Native
 
-### Installing
-
-To download the latest APK click here [HashPass.apk](release/HashPass.apk)
-
-### Developing
+### Set up
 
 To install for development, clone this repository and run:
 
