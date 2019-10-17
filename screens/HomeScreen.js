@@ -24,9 +24,12 @@ const Crypto = require('crypto-js');
 const hex_alph = "0123456789abcdef";
 const my_alph = "0123456789abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ!@#$%^&*-+=";
 const default_passlength = 16;
+const default_passphrase_length = 5;
 var background_color = '#fff';
 var button_color = "#c194ef";
 import KeyboardShift from '../components/KeyboardShift';
+
+const {wordlist} = require('../resources/wordlist');
 
 export default class HomeScreen extends Component {
 	constructor(props) {
@@ -35,9 +38,12 @@ export default class HomeScreen extends Component {
 			key: '', 
 			secret: '', 
 			hide_password: false, 
-			hide_secret: true, 
+			hide_secret: true,
+			show_characters: true,
 			generated_pass: '',
-			passlength: default_passlength, 
+			passlength: default_passlength,
+			charpasslength: default_passlength, 
+			wordpasslength: default_passphrase_length,			
 			alphabet: my_alph };
 	}
 render() { return (     
@@ -56,12 +62,12 @@ render() { return (
 	 onPress = {() => 
 		{
 		Toast.showWithGravity('Password copied to clipboard.',  Toast.SHORT,  Toast.CENTER);
-		Clipboard.setString(reEncode(Crypto.SHA512(this.state.secret  + Crypto.SHA512(this.state.key).toString()).toString(),hex_alph,this.state.alphabet).slice(0,this.state.passlength)); 		
+		Clipboard.setString(getPassword(this.state.secret,this.state.key, this.state.alphabet, this.state.passlength)); 		
 		}}
 	/>
 	<View style = {{flexDirection: 'row', justifyContent: 'center'}}>
 		<Text style={{padding: 10, fontSize: 20, fontFamily: "space-mono"}}>
-			{this.state.hide_password ? '***Password Hidden***' : this.state.key == '' || this.state.secret == '' || this.state.alphabet == '' ? 'Your password will appear here' : reEncode(Crypto.SHA512(this.state.secret  + Crypto.SHA512(this.state.key).toString()).toString(),hex_alph,this.state.alphabet).slice(0,this.state.passlength)}		  
+			{this.state.hide_password ? '***Password Hidden***' : this.state.key == '' || this.state.secret == '' || this.state.alphabet == '' ? 'Your password will appear here' : getPassword(this.state.secret,this.state.key, this.state.alphabet, this.state.passlength) }	 	  
 		</Text>
 	</View>
 	<Text> Secret: </Text>
@@ -95,26 +101,48 @@ render() { return (
 		</TouchableOpacity>
 	</View>
 	<Text>{"     "}</Text>	    
-	<Text> Password Length: </Text>
-	<TextInput
-	 style={{height: 40}}
-	 placeholder={"Default: " + default_passlength.toString()}
-	 onChangeText={(passlength) => this.setState({passlength})}
-	 value={String(this.state.passlength)}
+	{this.state.show_characters &&
+	<View>
+		<Text> Password Length: </Text>
+		<TextInput
+		 style={{height: 40}}
+		 placeholder={"Default: " + default_passlength.toString()}
+		 onChangeText={(charpasslength) => this.setState({charpasslength: charpasslength, passlength: charpasslength})}
+		 value={String(this.state.charpasslength)}
+		/>
+	</View> }
+	{!this.state.show_characters &&
+	<View>
+		<Text> Passphrase Length: </Text>
+		<TextInput
+		 style={{height: 40}}
+		 placeholder={"Default: " + default_passlength.toString()}
+		 onChangeText={(wordpasslength) => this.setState({wordpasslength: wordpasslength, passlength: wordpasslength})}
+		 value={String(this.state.wordpasslength)}
+		/>
+	</View> }
+	<Button
+	 title = {this.state.show_characters ? "Use Wordlist" : "Use Characters"}
+	 color = "#c194ef"
+	 onPress = {() => {
+		 this.setState({show_characters: !this.state.show_characters}) 
+		 if (this.state.show_characters) { this.setState({alphabet: wordlist, passlength: this.state.wordpasslength}) }
+		 else {  this.setState({alphabet: my_alph, passlength: this.state.charpasslength}) }
+		}}
 	/>
-	<Text> Characters (order matters): </Text>
-	<TextInput
-	 multiline
-	 style={{height: 100, fontFamily: "space-mono"}}
-	 placeholder={"Default: " + my_alph}
-	 onChangeText={(alphabet) => this.setState({alphabet})}
-	 value={this.state.alphabet}
-	/>
-	<View style = {{flexDirection: 'column', justifyContent: 'center'}}>
-		<View style = {{flexDirection: 'row', justifyContent: 'center'}}>
-			<Text style={{ borderBottomWidth: 30, borderColor: background_color}}>You may change the password length and characters used. They will be reset when the app is reloaded. In a later version you will be able to save these values. </Text>
-		</View>
-	</View>
+	{this.state.show_characters && 
+	<View> 
+		<Text> Characters (order matters): </Text>
+		<TextInput
+		 multiline
+		 style={{height: 100, fontFamily: "space-mono"}}
+		 placeholder={"Default: " + my_alph}
+		 onChangeText={(alphabet) => this.setState({alphabet})}
+		 value={this.state.alphabet}
+		/>
+	</View>}
+	<Text> Password security: </Text>
+	<Text> {Math.floor(Math.log2(this.state.alphabet.length ** this.state.passlength)) } bits </Text>
 </View>
 </ScrollView>
 </KeyboardShift>
@@ -125,6 +153,20 @@ render() { return (
 HomeScreen.navigationOptions = {
   title: 'HashPass',
 };
+
+//getPassword(this.state.secret,this.state.key, this.state.alphabet, this.state.length)
+function getPassword(secret,key,alphabet,length, capitalize = true) {
+	if (typeof alphabet === 'string')
+	{
+		return reEncode(Crypto.SHA512(secret  + Crypto.SHA512(key).toString()).toString(),hex_alph, alphabet).slice(0,length)
+	}
+	else
+	{	
+		let pass = reEncode(Crypto.SHA512(secret  + Crypto.SHA512(key).toString()).toString(),hex_alph, alphabet).slice(0,length).join(" ")
+		return {capitalize ? pass.slice(0,1).toUpperCase() + pass.slice(1) : pass}
+	}
+}
+
 function reEncode(s, alpha, alphaNew) {
 	const m1 = alpha.length;
 	const m2 = alphaNew.length;
@@ -143,9 +185,25 @@ function reEncode(s, alpha, alphaNew) {
 	let new_digits = convertBase(s_digits, m1, m2);
 	//console.log("s_digits: " + s_digits.toString())
 	//console.log("new_digits: " + new_digits)
-	let new_s = '';
+	
+	var new_s
+	if (typeof alphaNew === 'string') 
+	{
+		new_s = '';
+	}
+	else 
+	{
+		new_s = [];
+	}
 	for (let i = 0; i < new_digits.length; i++) {
-		new_s = alphaNew[new_digits[i]] + new_s
+		if (typeof alphaNew === 'string') 
+		{ 
+			new_s = alphaNew[new_digits[i]] + new_s;
+		}
+		else 
+		{ 
+			new_s.push(alphaNew[new_digits[new_digits.length - 1 - i]])
+		}
 	}
 	//console.log(new_s)
 	return new_s;

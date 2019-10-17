@@ -25,7 +25,7 @@ export default function AboutScreen() {
 			The hexadecimal number is then converted to a new number system using the given character set, which by default is base 73.
 			Then the first few characters are taken (default: 16) for the password.
 			</Text>
-		</View>
+		</View>		
     </ScrollView>
   );
 }
