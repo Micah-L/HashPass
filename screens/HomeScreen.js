@@ -163,7 +163,14 @@ function getPassword(secret,key,alphabet,length, capitalize = true) {
 	else
 	{	
 		let pass = reEncode(Crypto.SHA512(secret  + Crypto.SHA512(key).toString()).toString(),hex_alph, alphabet).slice(0,length).join(" ")
-		return {capitalize ? pass.slice(0,1).toUpperCase() + pass.slice(1) : pass}
+		if (capitalize)
+		{
+			return pass.slice(0,1).toUpperCase() + pass.slice(1)
+		}
+		else
+		{
+			return pass
+		}
 	}
 }
 

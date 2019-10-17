@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import { Text, ScrollView, StyleSheet, View} from 'react-native';
+import { Text, ScrollView, StyleSheet, View, Linking} from 'react-native';
 
 export default function AboutScreen() {
   return (
@@ -25,7 +25,12 @@ export default function AboutScreen() {
 			The hexadecimal number is then converted to a new number system using the given character set, which by default is base 73.
 			Then the first few characters are taken (default: 16) for the password.
 			</Text>
-		</View>		
+		</View>
+		<View style={styles.textBox}>
+			<Text style={styles.baseText}>
+			If you choose to use the built in wordlist, the password will be a sequence of words separated by spaces, with the first letter of the first word capitalized. The wordlist contains 26653 english words.
+			</Text>
+		</View>
     </ScrollView>
   );
 }
