@@ -109,6 +109,7 @@ render() { return (
 		 placeholder={"Default: " + default_passlength.toString()}
 		 onChangeText={(charpasslength) => this.setState({charpasslength: charpasslength, passlength: charpasslength})}
 		 value={String(this.state.charpasslength)}
+		 keyboardType={'number-pad'}
 		/>
 	</View> }
 	{!this.state.show_characters &&
