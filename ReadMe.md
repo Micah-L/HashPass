@@ -48,3 +48,11 @@ Please read [CONTRIBUTING.md]
 
 This project is licensed under the MIT License - see the [LICENSE.md](LICENSE.md) file for details
 
+## Donate
+
+HashPass is independently developed, open source software.
+
+If you find it useful, feel free to donate some bitcoin:
+
+bc1qw365smw3mjpkhjkq47egnm9hzusfsxh5ysl7tf
+
