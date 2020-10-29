@@ -6,6 +6,8 @@ HashPass is a new kind of password manager and password generator. You won't nee
 
 You can install this app right from [the Google play store](https://play.google.com/store/apps/details?id=com.micah.hashpass), or from the [latest apk](release/HashPass.apk).
 
+You can also access a web version of this app on [my website](https://micahloverro.com/hashpass).
+
 ## Developing
 
 This project uses Expo. Thus it is written in JavaScript using React.
